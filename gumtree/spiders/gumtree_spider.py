@@ -13,8 +13,8 @@ class GumtreeSpider(CrawlSpider):
         "http://www.gumtree.com.au/s-bicycles/melbourne/c18560l3001317r50"
     ]
 
-    rules = (Rule (SgmlLinkExtractor(allow=('//*[@id="search-content"]/div/div/div/a[@class="rs-paginator-btn next"]', ),
-                   callback="parse_items"),
+    rules = (Rule (SgmlLinkExtractor(allow=('//*[@id="search-content"]/div/div/div/a[@class="rs-paginator-btn next"]', )),
+                   callback="parse_items",
                    follow=True),
             )
 
