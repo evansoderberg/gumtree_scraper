@@ -18,7 +18,10 @@ class GumtreeSpider(Spider):
             item = GumtreeItem()
             item['title'] = ad.xpath('div/div/h3[starts-with(@class, "rs-ad-title")]/a/text()').extract()[0].title()
             item['link'] = ad.xpath('div/div/h3[starts-with(@class, "rs-ad-title")]/a/@href').extract()[0]
-            item['pic'] = ad.xpath('div/div/div/img/@src').extract()[0]
+            try:
+                item['pic'] = ad.xpath('div/div/div/img/@src').extract()[0]
+            except IndexError:
+                item['pic'] = []
             try:
                 item['location'] = ad.xpath('div/div/span[@class="rs-ad-location-suburb"]/text()').extract()
             except IndexError:
