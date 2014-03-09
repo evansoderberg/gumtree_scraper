@@ -1,16 +1,24 @@
 from scrapy.spider import Spider
-from scrapy.selector import Selector
+from scrapy.selector import Selector, HtmlXPathSelector
+from scrapy.contrib.spiders import CrawlSpider, Rule
+from scrapy.contrib.linkextractors.sgml import SmglLinkExtractor
+
 
 from gumtree.items import GumtreeItem
 
-class GumtreeSpider(Spider):
+class GumtreeSpider(CrawlSpider):
     name = "gumtree"
     allowed_domains = ["gumtree.com.au"]
     start_urls = [
         "http://www.gumtree.com.au/s-bicycles/melbourne/c18560l3001317r50"
     ]
 
-    def parse(self, response):
+    rules = (Rule (SmglLinkExtractor(allow=('//*[@id="search-content"]/div/div/div/a[@class="rs-paginator-btn next"]', ),
+                   callback="parse_items"),
+                   follow=True),
+            )
+
+    def parse_items(self, response):
         sel = Selector(response)
         ads = sel.xpath("//ul/li[@class='js-click-block ']")
         items = []
@@ -18,12 +26,13 @@ class GumtreeSpider(Spider):
             item = GumtreeItem()
             item['title'] = ad.xpath('div/div/h3[starts-with(@class, "rs-ad-title")]/a/text()').extract()[0].title()
             item['link'] = ad.xpath('div/div/h3[starts-with(@class, "rs-ad-title")]/a/@href').extract()[0]
+            item['price'] = ad.xpath('div/div/div[contains(@class, "rs-ad-price")]/div[@class="h-elips "]/text()').extract()[0].strip()
             try:
                 item['pic'] = ad.xpath('div/div/div/img/@src').extract()[0]
             except IndexError:
                 item['pic'] = []
             try:
-                item['location'] = ad.xpath('div/div/span[@class="rs-ad-location-suburb"]/text()').extract()
+                item['location'] = ad.xpath('div/div/span[@class="rs-ad-location-suburb"]/text()').extract()[0]
             except IndexError:
                 item['location'] = []
             items.append(item)

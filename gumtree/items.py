@@ -5,3 +5,4 @@ class GumtreeItem(Item):
     link = Field()
     pic = Field()
     location = Field()
+    price = Field()
