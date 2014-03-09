@@ -13,10 +13,7 @@ class GumtreeSpider(CrawlSpider):
         "http://www.gumtree.com.au/s-bicycles/melbourne/c18560l3001317r50"
     ]
 
-    rules = (Rule (SgmlLinkExtractor(allow=('//*[@id="search-content"]/div/div/div/a[@class="rs-paginator-btn next"]', )),
-                   callback="parse_items",
-                   follow=True),
-            )
+    rules = (Rule (SgmlLinkExtractor(restrict_xpaths=('//div[@class="rs-paginator-pager"]/a[@class="rs-paginator-btn next"]', )), callback="parse_items", follow=True),)
 
     def parse_items(self, response):
         sel = Selector(response)
