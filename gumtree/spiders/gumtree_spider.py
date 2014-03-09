@@ -1,7 +1,7 @@
 from scrapy.spider import Spider
 from scrapy.selector import Selector, HtmlXPathSelector
 from scrapy.contrib.spiders import CrawlSpider, Rule
-from scrapy.contrib.linkextractors.sgml import SmglLinkExtractor
+from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
 
 
 from gumtree.items import GumtreeItem
