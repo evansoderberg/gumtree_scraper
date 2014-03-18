@@ -5,7 +5,7 @@ from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
 
 
 from gumtree.items import GumtreeItem
-count = 0
+
 class GumtreeSpider(CrawlSpider):
     name = "gumtree"
     allowed_domains = ["gumtree.com.au"]
@@ -19,21 +19,18 @@ class GumtreeSpider(CrawlSpider):
         sel = Selector(response)
         ads = sel.xpath("//ul/li[@class='js-click-block ']")
         items = []
-        global count
-        if count < 100:
-            for ad in ads:
-                item = GumtreeItem()
-                item['title'] = ad.xpath('div/div/h3[starts-with(@class, "rs-ad-title")]/a/text()').extract()[0].title()
-                item['link'] = ad.xpath('div/div/h3[starts-with(@class, "rs-ad-title")]/a/@href').extract()[0]
-                item['price'] = ad.xpath('div/div/div[contains(@class, "rs-ad-price")]/div[@class="h-elips "]/text()').extract()[0].strip()
-                try:
-                    item['pic'] = ad.xpath('div/div/div/img/@src').extract()[0]
-                except IndexError:
-                    item['pic'] = []
-                try:
-                    item['location'] = ad.xpath('div/div/span[@class="rs-ad-location-suburb"]/text()').extract()[0]
-                except IndexError:
-                    item['location'] = []
-                items.append(item)
-                count += 1
+        for ad in ads:
+            item = GumtreeItem()
+            item['title'] = ad.xpath('div/div/h3[starts-with(@class, "rs-ad-title")]/a/text()').extract()[0].title()
+            item['link'] = ad.xpath('div/div/h3[starts-with(@class, "rs-ad-title")]/a/@href').extract()[0]
+            item['price'] = ad.xpath('div/div/div[contains(@class, "rs-ad-price")]/div[@class="h-elips "]/text()').extract()[0].strip()
+            try:
+                item['pic'] = ad.xpath('div/div/div/img/@src').extract()[0]
+            except IndexError:
+                item['pic'] = []
+            try:
+                item['location'] = ad.xpath('div/div/span[@class="rs-ad-location-suburb"]/text()').extract()[0]
+            except IndexError:
+                item['location'] = []
+            items.append(item)
         return items
