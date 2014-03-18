@@ -10,6 +10,7 @@ BOT_NAME = 'gumtree'
 
 SPIDER_MODULES = ['gumtree.spiders']
 NEWSPIDER_MODULE = 'gumtree.spiders'
+DOWNLOAD_DELAY = 0.2
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'gumtree (+http://www.yourdomain.com)'
